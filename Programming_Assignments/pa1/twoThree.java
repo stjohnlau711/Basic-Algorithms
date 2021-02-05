@@ -1,4 +1,4 @@
-import java.util.Scanner; //WIP
+import java.util.Scanner;
 import java.io.*;
 
 class Node {
@@ -57,22 +57,30 @@ public class twoThree {
 
         BufferedWriter output = new BufferedWriter(new OutputStreamWriter(System.out, "ASCII"), 4096);
 
-        for(int i = 0; i < calls; i ++){
+        for(int i = 0; i < calls; i ++){ //perform queries
             String x = scanner.next();
             String y = scanner.next();
-            printRange(tree.root, tree.height, x, y, "a", output);
+            //switch x and y if x > y
+            if(x.compareTo(y) <= 0){
+                printRange(tree.root, tree.height, x, y, "a", output);
+            } else {
+                printRange(tree.root, tree.height, y, x, "a", output);
+            }
+
         }
 
+        scanner.close();
+        output.flush();
     }
 
     static void printRange(Node root, int h, String x, String y, String lo, BufferedWriter output) throws IOException {
-
+        
         if(h == 0){ //at leaf node
             if((root.guide.compareTo(x) >= 0) && (root.guide.compareTo(y) <= 0)){
                 output.write(root.guide + " " + ((LeafNode) root).value + "\n"); //cast root to be leafnode
                 output.flush();
-                return;
             }
+            return;
         }
 
         String hi = root.guide;
@@ -84,10 +92,12 @@ public class twoThree {
         printRange(((InternalNode) root).child0, h - 1, x, y, lo, output);
         printRange(((InternalNode) root).child1, h - 1, x, y, ((InternalNode) root).child0.guide, output);
 
+
         if(((InternalNode) root).child2 != null){
             printRange(((InternalNode) root).child2, h - 1, x, y, ((InternalNode) root).child1.guide, output);
-            //reaches leafnode but I'm casting to internal node <= FIX
         }
+
+
 
 
     }
